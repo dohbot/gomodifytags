@@ -80,7 +80,12 @@ func main() {
 }
 
 func realMain() error {
-	cfg, err := parseConfig(os.Args[1:])
+	var args []string
+	args = append(args, os.Args[1:]...)
+	if adds, err := os.ReadFile(".gomodifytags"); err == nil {
+		args = append(args, strings.Fields(string(adds))...)
+	}
+	cfg, err := parseConfig(args)
 	if err != nil {
 		if err == flag.ErrHelp {
 			return nil
